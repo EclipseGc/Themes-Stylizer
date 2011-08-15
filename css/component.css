@@ -1,0 +1,16 @@
+#themes-stylizer-component {
+  width:100%;
+  clear:both;
+  background: none repeat scroll 0 0 #222222;
+  border-bottom: 1px solid #1D1D1D;
+  color:#999999;
+}
+
+#themes-stylizer-component #palette .item-selected {
+  background-color:#333333;
+}
+
+#themes-stylizer-component #palette label {
+  font-size:.85em;
+  font-weight:normal;
+}

@@ -1,0 +1,5 @@
+name = "Theme Stylizer"
+description = "Provides a plugin type and corresponding administration for theme color and style management."
+core = 7.x
+dependencies[] = stylizer
+

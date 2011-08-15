@@ -1,0 +1,115 @@
+<?php
+
+function themes_stylizer_permission() {
+  return array(
+    'administer theme style' => array(
+      'title' => t('Administer theme style'), 
+      'description' => t('Access the theme style system.'),
+    ),
+  );
+}
+
+function themes_stylizer_ctools_plugin_type() {
+  return array(
+    'theme_style' => array(
+      'load themes' => TRUE,
+    ),
+  );
+}
+
+function themes_stylizer_theme() {
+  return array(
+    'themes_stylizer_component' => array(
+      'render element' => 'page',
+      'template' => 'themes_stylizer_component',
+    ),
+  );
+}
+
+function template_process_themes_stylizer_component(&$variables) {
+  // Place the rendered HTML for the page body into a top level variable.
+  $variables['page'] = $variables['page']['#children'];
+}
+
+function themes_stylizer_component_form($form, $form_state) {
+  ctools_include('plugins');
+  ctools_add_js('stylizer');
+  ctools_add_css('stylizer');
+  drupal_add_js('misc/farbtastic/farbtastic.js');
+  drupal_add_css('misc/farbtastic/farbtastic.css');
+  //drupal_add_js(drupal_get_path('module', 'themes_stylizer') .'/js/component.js');
+  global $theme_info;
+  $plugin = ctools_get_plugins('themes_stylizer', 'theme_style', $theme_info->info['theme_style']['default']);
+  $settings = variable_get('themes_stylizer_style', array());
+  if (isset($settings[$plugin['module']])) {
+    $settings = $settings[$plugin['module']];
+  }
+  if (!empty($plugin['palette'])) {
+    $form['top box']['color'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Palette'),
+      '#attributes' => array('id' => 'ctools_stylizer_color_scheme_form', 'class' => array('ctools-stylizer-color-edit')),
+      '#theme' => 'ctools_stylizer_color_scheme_form',
+    );
+
+    $form['top box']['color']['palette']['#tree'] = TRUE;
+
+    foreach ($plugin['palette'] as $key => $color) {
+      if (empty($settings['palette'][$key])) {
+        $settings['palette'][$key] = $color['default_value'];
+      }
+
+      $form['top box']['color']['palette'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => $color['label'] . ':',
+        '#default_value' => $settings['palette'][$key],
+        '#size' => 8,
+      );
+    }
+  }
+  $form['plugin'] = array(
+    '#type' => 'value',
+    '#value' => $plugin,
+  );
+  if (!empty($plugin['form']) && function_exists($plugin['form'])) {
+    $form = $plugin['form']($form, $form_state);
+  }
+  $form['apply'] = array(
+    '#type' => 'submit',
+    '#value' => t('Apply'),
+  );
+  return $form;
+}
+
+function themes_stylizer_component_form_submit($form, &$form_state) {
+  $plugin = $form_state['values']['plugin'];
+  foreach ($form_state['values']['palette'] as $preset => $color) {
+    $form_state['settings']['palette'][$preset] = $color;
+  }
+  if (!empty($plugin['form submit']) && function_exists($plugin['form submit'])) {
+    $plugin['form submit']($form, $form_state);
+  }
+  $variable = variable_get('themes_stylizer_style', array());
+  $variable[$plugin['module']] = $form_state['settings'];
+  variable_set('themes_stylizer_style', $variable);
+  ctools_stylizer_build_style($plugin, $form_state['settings'], TRUE);
+}
+
+function themes_stylizer_page_alter(&$page) {
+  if (user_access('administer theme style')) {
+    global $theme_info;
+    if (isset($theme_info->info['theme_style']['default'])) {
+      $plugin = ctools_get_plugins('themes_stylizer', 'theme_style', $theme_info->info['theme_style']['default']);
+      ctools_include('stylizer');
+      $settings = variable_get('themes_stylizer_style', array());
+      if (!$settings[$plugin['module']]) {
+        foreach ($plugin['palette'] as $preset => $values) {
+          $settings['palette'][$preset] = $values['default_value'];
+        }
+      }
+      ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
+      drupal_add_css(drupal_get_path('module', 'themes_stylizer') .'/css/component.css');
+      array_unshift($page['#theme_wrappers'], 'themes_stylizer_component');
+    }
+  }
+}
