@@ -21,9 +21,26 @@ function themes_stylizer_theme() {
   return array(
     'themes_stylizer_component' => array(
       'render element' => 'page',
-      'template' => 'themes_stylizer_component',
     ),
   );
+}
+
+function theme_themes_stylizer_component($vars) {
+  $page = $vars['page'];
+  ctools_add_js('collapsible-div');
+  ctools_add_css('collapsible-div');
+  drupal_add_css(drupal_get_path('module', 'themes_stylizer') .'/css/component.css');
+  $content = render(drupal_get_form('themes_stylizer_component_form'));
+
+  $output = '<div id="themes-stylizer-component">';
+  $output .= '<div class="ctools-collapsible-container ctools-collapsed">';
+  $output .= '<div class="ctools-collapsible-content clearfix">' . $content . '</div>';
+  $output .= '<div class="ctools-collapsible-handle">' . t('Colorize') . '</div>';
+  $output .= '</div>';
+  $output .= '</div>';
+  $output .= $page;
+
+  return $output;
 }
 
 function template_process_themes_stylizer_component(&$variables) {
@@ -108,7 +125,6 @@ function themes_stylizer_page_alter(&$page) {
         }
       }
       ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
-      drupal_add_css(drupal_get_path('module', 'themes_stylizer') .'/css/component.css');
       array_unshift($page['#theme_wrappers'], 'themes_stylizer_component');
     }
   }

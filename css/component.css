@@ -1,7 +1,7 @@
-#themes-stylizer-component {
+#themes-stylizer-component .ctools-collapsible-content {
   width:100%;
   clear:both;
-  background: none repeat scroll 0 0 #222222;
+  background:#222222;
   border-bottom: 1px solid #1D1D1D;
   color:#999999;
 }
@@ -13,4 +13,46 @@
 #themes-stylizer-component #palette label {
   font-size:.85em;
   font-weight:normal;
+}
+
+#themes-stylizer-component .ctools-collapsible-container .ctools-toggle-collapsed,
+#themes-stylizer-component .ctools-collapsible-container .ctools-toggle {
+  display:block;
+  background-image:url(../images/button-circle.gif);
+  background-position:0;
+  height:28px;
+  width:17px;
+  border-left:1px solid #2a2a2a;
+}
+
+#themes-stylizer-component .ctools-collapsible-handle {
+  background-image:url(../images/button-bg.gif);
+  height:23px;
+  width:90px;
+  color:#ffffff;
+  padding-left:34px;
+  padding-top:5px;
+  border-right:1px solid #2a2a2a;
+}
+
+#themes-stylizer-component #ctools_stylizer_color_scheme_form {
+  width: 600px;
+  border:0;
+  border-right: 1px dashed #4a4a4a;
+}
+
+#themes-stylizer-component #placeholder {
+  margin:0;
+  float:left;
+}
+
+#themes-stylizer-component #palette {
+  width:200px;
+  float:left;
+}
+
+#themes-stylizer-component fieldset legend {
+  font-variant:small-caps;
+  font-size:1.2em;
+  padding:1em 0 0 1em;
 }
