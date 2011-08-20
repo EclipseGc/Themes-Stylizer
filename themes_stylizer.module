@@ -13,6 +13,7 @@ function themes_stylizer_ctools_plugin_type() {
   return array(
     'theme_style' => array(
       'load themes' => TRUE,
+      'function' => 'themes_stylizer_theme_style_process',
     ),
   );
 }
@@ -23,6 +24,10 @@ function themes_stylizer_theme() {
       'render element' => 'page',
     ),
   );
+}
+
+function themes_stylizer_theme_style_process(&$plugin, $info) {
+  drupal_set_message('<pre>' . var_export($plugin, TRUE) . '</pre>');
 }
 
 function theme_themes_stylizer_component($vars) {
@@ -124,6 +129,15 @@ function themes_stylizer_page_alter(&$page) {
           $settings['palette'][$preset] = $values['default_value'];
         }
       }
+      $file_name_comp = explode('.', $plugin['file']);
+      $file_name_comp = array_pop($file_name_comp);
+      if (count($file_name_comp)) {
+        $file_name = implode('-', $file_name_comp);
+      }
+      else {
+        $file_name = $file_name_comp[0];
+      }
+      $settings[$plugin['module']]['name'] = $plugin['module'] . '__' . $file_name;
       ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
       array_unshift($page['#theme_wrappers'], 'themes_stylizer_component');
     }

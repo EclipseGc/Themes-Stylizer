@@ -1,9 +1,14 @@
-#themes-stylizer-component .ctools-collapsible-content {
+#themes-stylizer-component {
   width:100%;
   clear:both;
   background:#222222;
-  border-bottom: 1px solid #1D1D1D;
   color:#999999;
+  padding-bottom:5px;
+}
+
+#themes-stylizer-component .ctools-collapsible-content {
+  border-bottom: 1px solid #1D1D1D;
+  margin-bottom:-1px;
 }
 
 #themes-stylizer-component #palette .item-selected {
@@ -23,6 +28,7 @@
   height:28px;
   width:17px;
   border-left:1px solid #2a2a2a;
+  margin-left:10px;
 }
 
 #themes-stylizer-component .ctools-collapsible-handle {
@@ -33,10 +39,11 @@
   padding-left:34px;
   padding-top:5px;
   border-right:1px solid #2a2a2a;
+  margin-left:10px;
 }
 
 #themes-stylizer-component #ctools_stylizer_color_scheme_form {
-  width: 600px;
+  width: auto;
   border:0;
   border-right: 1px dashed #4a4a4a;
 }
@@ -47,7 +54,6 @@
 }
 
 #themes-stylizer-component #palette {
-  width:200px;
   float:left;
 }
 
