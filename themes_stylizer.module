@@ -30,8 +30,7 @@ function themes_stylizer_theme_style_process(&$plugin, $info) {
   drupal_set_message('<pre>' . var_export($plugin, TRUE) . '</pre>');
 }
 
-function theme_themes_stylizer_component($vars) {
-  $page = $vars['page'];
+function theme_themes_stylizer_component() {
   ctools_add_js('collapsible-div');
   ctools_add_css('collapsible-div');
   drupal_add_css(drupal_get_path('module', 'themes_stylizer') .'/css/component.css');
@@ -43,7 +42,6 @@ function theme_themes_stylizer_component($vars) {
   $output .= '<div class="ctools-collapsible-handle">' . t('Colorize') . '</div>';
   $output .= '</div>';
   $output .= '</div>';
-  $output .= $page;
 
   return $output;
 }
@@ -117,7 +115,7 @@ function themes_stylizer_component_form_submit($form, &$form_state) {
   ctools_stylizer_build_style($plugin, $form_state['settings'], TRUE);
 }
 
-function themes_stylizer_page_alter(&$page) {
+function themes_stylizer_page_build(&$page) {
   if (user_access('administer theme style')) {
     global $theme_info;
     if (isset($theme_info->info['theme_style']['default'])) {
@@ -139,7 +137,9 @@ function themes_stylizer_page_alter(&$page) {
       }
       $settings[$plugin['module']]['name'] = $plugin['module'] . '__' . $file_name;
       ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
-      array_unshift($page['#theme_wrappers'], 'themes_stylizer_component');
+      $page['page_top']['themes_stylizer'] = array(
+        '#theme' => 'themes_stylizer_component',
+      );
     }
   }
 }
