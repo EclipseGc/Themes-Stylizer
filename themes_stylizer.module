@@ -128,7 +128,7 @@ function themes_stylizer_page_build(&$page) {
         }
       }
       $file_name_comp = explode('.', $plugin['file']);
-      $file_name_comp = array_pop($file_name_comp);
+      array_pop($file_name_comp);
       if (count($file_name_comp)) {
         $file_name = implode('-', $file_name_comp);
       }
