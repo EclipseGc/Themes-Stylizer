@@ -116,30 +116,30 @@ function themes_stylizer_component_form_submit($form, &$form_state) {
 }
 
 function themes_stylizer_page_build(&$page) {
-  if (user_access('administer theme style')) {
-    global $theme_info;
-    if (isset($theme_info->info['theme_style']['default'])) {
-      $plugin = ctools_get_plugins('themes_stylizer', 'theme_style', $theme_info->info['theme_style']['default']);
-      ctools_include('stylizer');
-      $settings = variable_get('themes_stylizer_style', array());
-      if (!$settings[$plugin['module']]) {
-        foreach ($plugin['palette'] as $preset => $values) {
-          $settings['palette'][$preset] = $values['default_value'];
-        }
+  global $theme_info;
+  if (isset($theme_info->info['theme_style']['default'])) {
+    $plugin = ctools_get_plugins('themes_stylizer', 'theme_style', $theme_info->info['theme_style']['default']);
+    ctools_include('stylizer');
+    $settings = variable_get('themes_stylizer_style', array());
+    if (!$settings[$plugin['module']]) {
+      foreach ($plugin['palette'] as $preset => $values) {
+        $settings['palette'][$preset] = $values['default_value'];
       }
-      $file_name_comp = explode('.', $plugin['file']);
-      array_pop($file_name_comp);
-      if (count($file_name_comp)) {
-        $file_name = implode('-', $file_name_comp);
-      }
-      else {
-        $file_name = $file_name_comp[0];
-      }
-      $settings[$plugin['module']]['name'] = $plugin['module'] . '__' . $file_name;
-      ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
-      $page['page_top']['themes_stylizer'] = array(
-        '#theme' => 'themes_stylizer_component',
-      );
     }
+    $file_name_comp = explode('.', $plugin['file']);
+    array_pop($file_name_comp);
+    if (count($file_name_comp)) {
+      $file_name = implode('-', $file_name_comp);
+    }
+    else {
+      $file_name = $file_name_comp[0];
+    }
+    $settings[$plugin['module']]['name'] = $plugin['module'] . '__' . $file_name;
+    ctools_stylizer_add_css($plugin, $settings[$plugin['module']]);
+  }
+  if (user_access('administer theme style')) {
+    $page['page_top']['themes_stylizer'] = array(
+      '#theme' => 'themes_stylizer_component',
+    );
   }
 }
